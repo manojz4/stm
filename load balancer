@@ -1,0 +1,31 @@
+load balancer   
+do it in UBUNTU
+
+sudo apt update
+sudo apt install nginx -y
+systemctl start nginx
+systemctl enable nginx
+systemctl status nginx
+ls
+cd /var/www/html
+sudo su
+cat > index.html or nano index.html
+<h1>hiiiii</h1> in index.html
+-------------------------------------
+
+
+open centos/kali
+
+FOR INSTALL HTTPD (yum install httpd -y)
+sudo su
+cd /var/www/html
+nano index.html
+<h1>web server1</h1>
+--------------------------------------
+open kali/centos
+sudo su
+cd /var/www/html
+nano index.html
+<h1>webserver2</h1>
+--------------------------------------
+
