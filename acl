@@ -1,0 +1,33 @@
+#acl internet_allow src 172.16.0.23
+#http_access allow internet_allow
+
+#acl internet_allow_r src 172.16.0.23
+#http_reply_access allow internet_allow_r
+
+acl ban_you dstdomain .youtube.com
+http_access deny ban_you
+----------------------------------------------------
+
+squid#
+:acl internet_allow src 172.16.0.23
+#http_access allow internet_allow
+
+#acl bd_words urlpath_regex \.cars.*$
+#http_access deny bd_words
+#acl bd_words urlpath_regex "/etc/squid/bd.squid"
+#http_access deny bd_words
+#acl internet_allow_r src 172.16.0.23
+#http_reply_access allow internet_allow_r
+
+#acl ban_you dstdomain .youtube.com 
+#http_access deny ban_you
+
+#acl ban_port port 80 443
+#http_access deny ban_port
+----------------------------------------------------
+
+
+snort 
+
+sed -i 's/^include $RULE_PATH/#include $RULE_PATH/' /etc/snort/snort.conf 
+
