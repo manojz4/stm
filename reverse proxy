@@ -1,0 +1,124 @@
+/etc/nginx/sites-available - all config file
+/etc/nginx/sites-enabled - all link to the config file or symbolic or soft link
+
+
+
+stop the default server
+# unlink /etc/nginx/sites-enabled/default
+
+
+# mkdir -p /var/www/{marvels , thanos}/html
+or   ---------
+# mkdir -p /var/www/marvels/html
+# mkdir -p /var/www/thanos/html
+
+
+
+# cat > /var/www/marvels/html/index.html
+<h1>---------------</h1>
+<h1>--- MARVELS ---</h1>
+<h1>---------------</h1>
+
+
+
+# cat > /var/www/thanos/html/index.html
+<h1>---------------</h1>
+<h1>---- THANOS ---</h1>
+<h1>---------------</h1>
+
+
+
+
+set hosting configuration file
+
+go to 
+# cd /etc/nginx/sites-available
+
+```````````````````````````````````````````````````````````
+create default conf 
+# cd /etc/nginx/sites-available
+
+# vim marvels.conf
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/marvels/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name marvels.com www.marvels.com;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+
+```````````````````````````````````````````````````````````
+other than default server for all server 
+# cd /etc/nginx/sites-available
+
+# vim thanos.conf
+
+server {
+    listen 80 ;
+    listen [::]:80 ;
+
+    root /var/www/thanos/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name thanos.com www.thanos.com;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+
+NOTE : ONLY ONE OF OUR SERVER BLOCKS ON SERVER CAN HAVE THE default_server option enabled.
+
+
+create link of file 
+
+# ln -s /etc/nginx/sites-available/marvels.conf /etc/nginx/sites-enabled/marvels.conf
+# ln -s /etc/nginx/sites-available/thanos.conf /etc/nginx/sites-enabled/thanos.conf
+ln = link
+-s = soft link or symboilc link
+
+
+
+check the nginx files
+    # nginx -t
+
+
+systemctl restart nginx
+
+
+
+
+create forced dns
+
+# vim /etc/hosts
+
+create ip and domain name for all for config 
+
+192.168.206.134 marvels.com www.marvels.com
+192.168.206.134 thanos.com www.thanos.com
+
+
+
+# host marvels.com
+# host thanos.com
+
+
+
+check if the websites are working or not 
+
+# curl marvels.com
+# curl thanos.com
+
+or check on browser 
+
+marvels.com  or  www.marvels.com
+thanos.com   or  www.thanos.com
