@@ -16,3 +16,8 @@ this is format
 alert            ip       any      any ->     any      any       (msg:"ip alert"; sid:100001; rev:1; )
 (snort rule) (protocol) (src ip) (src port) (dst ip) (dst port) (message)
 ----
+or based on ques
+alert icmp any any -> $HOME_NET any (msg:"icmp alert "; sid:100002 ; rev:1; )
+----
+- test
+- snort -T -i ens33 -c /etc/snort/snort.conf
