@@ -1,0 +1,166 @@
+CentOS: 
+vm 1 : server 
+Add two Network adapter NAT and one is Host-Only
+
+stop firewall
+systemctl stop firewalld
+systemctl status firewalld
+---
+vm2 : client
+
+stop firewall
+Add  Network adapter only NAT
+
+------------------
+in vm software (for overall vms if not done)
+edit => virtual network editor 
+check dhcp is enabled
+---------------------------
+
+vm1 :
+
+$ cd /etc/yum.repos.d/
+$ sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+$ sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+$ cd
+$ yum install git -y
+
+
+a) Create a internal web server:
+
+$ yum install httpd -y
+
+b) Open config:
+
+$ nano /etc/httpd/conf/httpd.conf
+search for (below line)
+        Listen 192.168.254.137:80
+               (current host-only_ip:80) 
+               save it
+               if ip not found do (dhclient -r and dhclient and ip a)
+               
+               (also do this )in vm software (for overall vms if not done)
+                edit => virtual network editor 
+                check dhcp is enabled
+
+:wq
+
+
+
+$ systemctl restart httpd
+
+$ wget https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
+$ bash openvpn-install.sh
+
+(output displayed)
+Welcome to the OpenVPN installer!
+The git repository is available at: https://github.com/angristan/openvpn-install
+
+I need to ask you a few questions before starting the setup.
+You can leave the default options and just press enter if you are ok with them.
+
+I need to know the IPv4 address of the network interface you want OpenVPN listening to.
+Unless your server is behind NAT, it should be your public IPv4 address.
+IP address: 192.168.254.137   (host-only ip)
+****put ip of 1st vm
+
+enter
+----------------
+It seems this server is behind NAT. What is its public IPv4 address or hostname?
+We need it for the clients to connect to the server.
+Public IPv4 address or hostname: 192.168.206.133  (NAT  ip of 1st vm)
+
+Checking for IPv6 connectivity...
+
+Your host does not appear to have IPv6 connectivity.
+
+Do you want to enable IPv6 support (NAT)? [y/n]: n
+
+What port do you want OpenVPN to listen to?
+   1) Default: 1194
+   2) Custom
+   3) Random [49152-65535]
+Port choice [1-3]: 1
+
+What protocol do you want OpenVPN to use?
+UDP is faster. Unless it is not available, you shouldn't use TCP.
+   1) UDP
+   2) TCP
+Protocol [1-2]: 1
+
+What DNS resolvers do you want to use with the VPN?
+   1) Current system resolvers (from /etc/resolv.conf)
+   2) Self-hosted DNS Resolver (Unbound)
+   3) Cloudflare (Anycast: worldwide)
+   4) Quad9 (Anycast: worldwide)
+   5) Quad9 uncensored (Anycast: worldwide)
+   6) FDN (France)
+   7) DNS.WATCH (Germany)
+   8) OpenDNS (Anycast: worldwide)
+   9) Google (Anycast: worldwide)
+   10) Yandex Basic (Russia)
+   11) AdGuard DNS (Anycast: worldwide)
+   12) NextDNS (Anycast: worldwide)
+   13) Custom
+DNS [1-12]: 11
+
+
+Do you want to use compression? It is not recommended since the VORACLE attack makes use of it.
+Enable compression? [y/n]: n
+
+
+Do you want to customize encryption settings?
+Unless you know what you're doing, you should stick with the default parameters provided by the script.
+Note that whatever you choose, all the choices presented in the script are safe. (Unlike OpenVPN's defaults)
+See https://github.com/angristan/openvpn-install#security-and-encryption to learn more.
+
+Customize encryption settings? [y/n]: n
+
+
+Okay, that was all I needed. We are ready to setup your OpenVPN server now.
+You will be able to generate a client at the end of the installation.
+Press any key to continue...
+
+
+Tell me a name for the client.
+The name must consist of alphanumeric character. It may also include an underscore or a dash.
+Client name: zoro
+
+Do you want to protect the configuration file with a password?
+(e.g. encrypt the private key with a password)
+   1) Add a passwordless client
+   2) Use a password for the client
+Select an option [1-2]: 1
+
+Client zoro added.
+
+The configuration file has been written to /root/zoro.ovpn.
+Download the .ovpn file and import it in your OpenVPN client.
+____________________________________________________________________________________________
+
+On Server:
+
+$ scp /root/manya.ovpn root@192.168.144.217:/root/
+                                client-ip
+enter pass of vm2
+success
+
+----------------------
+
+On Client:
+
+$ cd /etc/yum.repos.d/
+$ sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+$ sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+ cd
+
+$ yum -y install centos-release-scl-rh      --optional
+$ yum -y install https://as-repository.openvpn.net/as-repo-centos7.rpm     --optional
+$ yum -y install openvpn-as     --optional
+
+$ yum install epel-release
+$ yum install openvpn
+
+$ openvpn --config ~/zoro.ovpn   (on vm2)
+
+On browser : ip of server host-only (vm1)
