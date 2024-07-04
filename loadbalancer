@@ -2,21 +2,24 @@
 1 server
 2 vm as client(as a backbone)
 -----
+install ssh for mobaxterm
+-----
 iNSTALL NGINX IN SERVER ONLY
+
 sudo apt update
 sudo apt install nginx -y
 systemctl start nginx
 systemctl enable nginx
 systemctl status nginx
 -------------------------------------
-vm1(server)
+vm1(SERVER)
 
 
- vim  /etc/nginx/conf.d/loadbalancer.conf
+ nano /etc/nginx/conf.d/loadbalancer.conf
 
 upstream backend {
         server 192.168.206.133; ip of created fake servers
-	server 192.168.206.131;       ip of created fake servers
+	server 192.168.206.131; ip of created fake servers
     }
 server {
         listen      80;
@@ -29,15 +32,22 @@ server {
 
 --------------------------------------
 first install nginx in all web servers
-also use vim or nano
+also use nano
 vm 2(web server)
 
-sudo vim /var/www/html/index.html
+apt install nginx  
+sudo nano /var/www/html/index.html
 	<h1>web server 1</h1>
 
-
+apt install nginx
 vm 3(web server)
-sudo vim /var/www/html/index.html
+sudo nano /var/www/html/index.html
 	<h1>web server 1</h1>
+
+-----
+
+DO it on all vms
+sudo nginx -t
+sudo systemctl reload nginx
 
 
