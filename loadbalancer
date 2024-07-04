@@ -39,15 +39,26 @@ apt install nginx
 sudo nano /var/www/html/index.html
 	<h1>web server 1</h1>
 
+delete default nginx file
+------------------------
 apt install nginx
 vm 3(web server)
 sudo nano /var/www/html/index.html
 	<h1>web server 1</h1>
 
+delete default nginx file
 -----
 
 DO it on all vms
 sudo nginx -t
 sudo systemctl reload nginx
+
+-- 
+go to server
+apt install curl
+
+curl ......(ip of main server)
+do it multiple times
+
 
 
