@@ -1,3 +1,11 @@
+PROXY : 
+    Nginx: [ web proxy server ]
+
+        apt / yum install nginx
+        systemctl start nginx
+        systemctl enable nginx
+
+
 /etc/nginx/sites-available - all config file
 /etc/nginx/sites-enabled - all link to the config file or symbolic or soft link
 
@@ -12,23 +20,21 @@ or   ---------
 # mkdir -p /var/www/marvels/html
 # mkdir -p /var/www/thanos/html
 
+apt install nano -y
 
-
-# cat > /var/www/marvels/html/index.html
+nano /var/www/marvels/html/index.html
 <h1>---------------</h1>
 <h1>--- MARVELS ---</h1>
 <h1>---------------</h1>
 
 
 
-# cat > /var/www/thanos/html/index.html
+nano /var/www/thanos/html/index.html
 <h1>---------------</h1>
 <h1>---- THANOS ---</h1>
 <h1>---------------</h1>
 
-
-
-
+----
 set hosting configuration file
 
 go to 
@@ -38,7 +44,7 @@ go to
 create default conf 
 # cd /etc/nginx/sites-available
 
-# vim marvels.conf
+# nano marvels.conf
 
 server {
     listen 80 default_server;
@@ -74,47 +80,43 @@ server {
         try_files $uri $uri/ =404;
     }
 }
-
-
-NOTE : ONLY ONE OF OUR SERVER BLOCKS ON SERVER CAN HAVE THE default_server option enabled.
+------
+there are three files created (default, marvels.conf, thanos.conf)rename default -- mv default backdefault
 
 
 create link of file 
 
 # ln -s /etc/nginx/sites-available/marvels.conf /etc/nginx/sites-enabled/marvels.conf
 # ln -s /etc/nginx/sites-available/thanos.conf /etc/nginx/sites-enabled/thanos.conf
+-----
+Information of above command            
 ln = link
 -s = soft link or symboilc link
-
-
+-----
 
 check the nginx files
     # nginx -t
-
+(nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful)
 
 systemctl restart nginx
-
-
-
-
+----------
 create forced dns
-
-# vim /etc/hosts
+----------
+nano /etc/hosts
 
 create ip and domain name for all for config 
 
-192.168.206.134 marvels.com www.marvels.com
-192.168.206.134 thanos.com www.thanos.com
-
-
-
+192.168.206.134 (ip of your vm) marvels.com www.marvels.com
+192.168.206.134 (ip of your vm) thanos.com www.thanos.com
+----
 # host marvels.com
 # host thanos.com
+ for checking valid address
+----
+apt install curl
 
-
-
-check if the websites are working or not 
-
+check if the websites are working or not
 # curl marvels.com
 # curl thanos.com
 
