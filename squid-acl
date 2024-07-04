@@ -26,21 +26,27 @@ nano /etc/squid/squid.conf
 (acl rules) add below 2 lines in squid.conf file
 
 acl bann dstdomain .youtube.com
-http_access deny bann
+http_access allow/deny bann
 
 or
 
  acl banned src 192.168.144.135 (your ip)
- http_access deny banned 
+ http_access allow/deny banned 
+
+or
+
+block ip range
+ acl banned src 192.168.144.0/24 (your ip)
+ http_access allow/deny banned 
 
 or
 
 depend on exam ques
-
 acl user1-access dstdomain "/etc/squid/user1.txt"
 http_access allow user1-access user1
 
 or
+
 (single line command , input depend on your ques)
 #acl mynet src 192.168.133.0/24
 #acl client1 src 192.168.133.134
@@ -62,32 +68,13 @@ http_access deny acts_users
 squid -k check && squid -k parse && squid -k reconfigure
 ----
 
+
+
+
 additional
 
 ####################### squid Acl rules ##############################
 
-1.firewall (nat ,host)
-2.client   (host only)
-
-#on firewall (fresh machine)
- yum remove iptables.x86_64 
-
-
-# yum install squid
-
-# cd /etc/squid
-
-# vim squid.conf
-
-67 cache_dir ufs /var/spool/squid 2048 16 256
-68 visible_hostname proxy.hpcsa.lab
-#comment http_access allow localnet
-# squid -z
-
-# ls /var/spool/squid
-
-# systemctl restart squid
-# systemctl status squid
 
 ####### on client #####
 
