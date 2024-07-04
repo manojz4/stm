@@ -1,0 +1,18 @@
+Conf
+Only 2 vm
+1st is (ubuntu)
+2nd also (ubuntu)
+----
+apt install snort
+nano /etc/snort/snort.conf
+uncomment include $RULE_PATH local.rule
+
+nano /etc/snort/rules/local.rules
+add rule
+
+alert ip any any -> any any (msg:"ip alert"; sid:100001; rev:1; )
+----
+this is format
+alert            ip       any      any ->     any      any       (msg:"ip alert"; sid:100001; rev:1; )
+(snort rule) (protocol) (src ip) (src port) (dst ip) (dst port) (message)
+----
