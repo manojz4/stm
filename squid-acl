@@ -1,7 +1,9 @@
 2 vms
 1st vm (centos gui)firewall/server
 nat,host
-2nd vm (linux)client/host only
+(if not asked to perform in 2nd vm use current browsers ip and put in preference)
+
+2nd vm (linux)client/host only (this should be done if asked in exam or leave)
 ----
 on firewall (fresh centos vm)
 # yum remove iptables.x86_64 
