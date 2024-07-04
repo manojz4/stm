@@ -1,1 +1,146 @@
-copy
+2 vms
+1st vm (centos gui)firewall/server
+nat,host
+2nd vm (linux)client/host only
+----
+on firewall (fresh centos vm)
+# yum remove iptables.x86_64 
+
+***very imp***
+cd /etc/yum.repos.d/ &&  sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* && systemctl stop firewalld && systemctl disable firewalld $$ sentenforce 0
+cd
+
+yum install squid -y
+systemctl restart squid 
+systemctl status squid 
+systemctl enable squid
+systemctl restart squid.service
+
+in browser -> preferences -> netwook setting  -> manual -> server_ip and port (3128)
+
+
+nano /etc/squid/squid.conf
+
+(acl rules) add below 2 lines in squid.conf file
+
+acl bann dstdomain .youtube.com
+http_access deny bann
+
+or
+
+ acl banned src 192.168.144.135 (your ip)
+ http_access deny banned 
+
+or
+
+depend on exam ques
+
+acl user1-access dstdomain "/etc/squid/user1.txt"
+http_access allow user1-access user1
+
+or
+(single line command , input depend on your ques)
+#acl mynet src 192.168.133.0/24
+#acl client1 src 192.168.133.134
+#acl client1-blocked dstdomain "etc/squid/client1-blocked.txt"
+#acl microsoft dstdomain .microsoft.com
+#acl blocked_sites dstdomain "/etc/squid/blocked_sites.txt
+#acl cdac-time time A 17:50-17:53
+#acl cdac dstdomain .cdac.in
+
+#http_access deny microsoft mynet
+#http_access deny blocked_sites mynet
+#http_access deny client1-blocked client1
+#http_access deny cdac cdac-time
+http_access allow acts_users
+#http_access allow mynet
+http_access deny acts_users
+
+----
+squid -k check && squid -k parse && squid -k reconfigure
+----
+
+additional
+
+####################### squid Acl rules ##############################
+
+1.firewall (nat ,host)
+2.client   (host only)
+
+#on firewall (fresh machine)
+ yum remove iptables.x86_64 
+
+
+# yum install squid
+
+# cd /etc/squid
+
+# vim squid.conf
+
+67 cache_dir ufs /var/spool/squid 2048 16 256
+68 visible_hostname proxy.hpcsa.lab
+#comment http_access allow localnet
+# squid -z
+
+# ls /var/spool/squid
+
+# systemctl restart squid
+# systemctl status squid
+
+####### on client #####
+
+1. set manual proxy ( firewall host only ip)
+############## on firewall ##########
+
+# vim /etc/squid/squid.conf          
+
+acl hpcsalab src 192.168.133.0/24
+
+http_access allow hpcsalab
+
+### block multiple website through txt file
+
+1.create text file .txt and add 2-3 websites
+
+2.add rules in vim squid.conf
+
+acl block_sites dstdomain "/etc/squid/block-sites.txt"
+
+http_access deny block_sites hpcsalab
+
+### now go on client browser and check the sites
+
+Q.1 a. Block some websites for client1 and allow for client2.
+ 
+Solution:
+
+step 1:on firewall Create text file and add 2,3 websites.
+step 2:acl client1 src 192.168.133.140
+step 3:acl client1_blocked_sites dstdomain "/etc/squid/client1-blocked-sites.txt"
+step 4:http_access deny client1_blocked_sites client1.
+
+
+Q1 b. Block some websites for client2 and allow for client1.
+ 
+Solution:
+
+step 1:on firewall Create text file and add 2,3 websites.
+step 2:acl client2 src 192.168.133.143
+step 3:acl client2_blocked_sites dstdomain "/etc/squid/client2-blocked-sites.txt"
+step 4:http_access deny client2_blocked_sites client2.
+
+
+Q1 c. Block some websites for both clients.
+
+Solutions:
+
+step 1:on firewall Create text file and add 2,3 websites.
+step 2:acl band_sites dstdomain "/etc/squid/band-sites.txt"
+step 3:http_access deny band_sites hpcsalab
+
+
+
+Common Steps for a,b,c
+
+#Go on Clients browser and check sites respectively.
+
