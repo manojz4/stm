@@ -1,0 +1,118 @@
+Basic firewall commands
+	current State 
+		# firewall-cmd --state
+------
+	check Zones 
+		# firewall-cmd --get-zones 
+  (shows just names)
+------
+		# ls /usr/lib/firewalld/zones 
+  (shows name with extension)
+------ 
+	default Zones
+		# firewall-cmd --get-default-zone 
+
+	active zone with Iterface 
+		# firewall-cmd --get-active-zones   
+  (if active then only output displayed) not much useful **
+	
+	list all rule of active Zone
+		# firewall-cmd --list-all
+
+	
+	list all rules of zones that we want to see
+		# firewall-cmd --zone=dmz --list-all (specify whichever zone you want)
+-----	
+	change/add/remove/list the interface of the Zone
+
+		# firewall-cmd --zone=dmz --change-interface=ens33
+		# firewall-cmd --zone=dmz --add-interface=ens36 (add interface which is not there)
+    # firewall-cmd --zone=dmz --list-all (for output)
+		# firewall-cmd --zone=dmz --remove-interface=ens33
+    # firewall-cmd --zone=dmz --list-all (output)
+		# firewall-cmd --zone=dmz --list-interface 
+      (shows interface only )
+	
+-----	
+	make Permanent 
+		# firewall-cmd --zone=dmz --change-interface=ens33
+		# anything and then --permanet
+		# firewall-cmd --reload	
+	
+	create new Zone
+		# firewall-cmd --new-zone=hpcsa --permanent 
+		# firewall-cmd --reload
+		# firewall-cmd --get-zones
+    (to see output)
+
+		# firewall-cmd --set-default-zone=hpcsa
+    # firewall-cmd --get-default-zone
+		
+		# firewall-cmd --add-interface=ens33 --permanent 
+  (assign interface which is not assigned to anyone)
+    # firewall-cmd --reload
+     
+
+		# firewall-cmd  --delete-zone=hpcsa --permanent
+    # firewall-cmd --reload
+
+	add or remove Services 
+		# firewall-cmd --get-services
+
+		# firewall-cmd --zone=public --add-service=ssh --permanent (whichever given in exam)
+    # firewall-cmd --reload
+    firewall-cmd --get-services
+		# firewall-cmd --zone=public --add-service={http,https} --permanent
+    # firewall-cmd --reload
+    firewall-cmd --get-services
+		
+		# firewall-cmd --zone=public --remove-service=ssh --permanent
+    # firewall-cmd --reload
+    firewall-cmd --get-services
+		# firewall-cmd --zone=public --remove-service={http,https} --permanent
+    # firewall-cmd --reload
+    firewall-cmd --get-services
+
+	add or remove Port
+		# firewall-cmd --zone=public --add-port=2020/tcp --permanent (whichever zone specified)
+    ]# firewall-cmd --zone=public --list-all
+		# firewall-cmd --zone=public --add-port=8080/udp --add-port=4040/tcp --permanent
+		#firewall-cmd --reload 
+		# firewall-cmd --zone=public --remove-port=2020/tcp --permanent
+    # firewall-cmd --reload 
+    firewall-cmd --zone=public --list-all
+-------
+Rich Rules: 
+	
+	accept , reject or drop particular system or IP 
+		
+	# firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="192.168.91.102/32" reject' --permanent
+											IP / IP range       accept or drop
+	#  firewall-cmd --reload
+	
+	# firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="192.168.91.102/32" service name="ssh" reject' --permanent
+											IP / IP range           services name  accept or drop      
+	   
+
+
+	# firewall-cmd --zone=public 
+
+		--add-rich-rule=                            
+		'rule					    			: starting of rule
+		family="ipv4"                           : ipv4 or ipv6
+		source address="192.168.91.102/32"      : ip or range of ip
+		service name="ssh"			: telnet , ssh , http
+		limit value="1/m" 			: 1 per minute or hour sec 
+		accept'                                 : drop , accept or reject   & end of rule
+		--permanent
+		
+		
+		
+		
+
+
+
+Panic mode : 
+	# firewall-cmd --panic-on
+
+	# firewall-cmd --panic-off
