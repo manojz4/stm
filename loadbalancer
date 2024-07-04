@@ -1,10 +1,8 @@
-proxy(load balancer)3 vm 
+(load balancer)3 vm /DO IT IN UBUNTU
 1 server
 2 vm as client(as a backbone)
-
-load balancer   
-do it in UBUNTU
-
+-----
+iNSTALL NGINX IN SERVER ONLY
 sudo apt update
 sudo apt install nginx -y
 systemctl start nginx
