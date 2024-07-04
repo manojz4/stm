@@ -1,3 +1,7 @@
+proxy(load balancer)3 vm 
+1 server
+2 vm as client(as a backbone)
+
 load balancer   
 do it in UBUNTU
 
