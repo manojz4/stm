@@ -1,3 +1,6 @@
+Configuration
+virtual hosting (1 vm only)
+---------
 PROXY : 
     Nginx: [ web proxy server ]
 
