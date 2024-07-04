@@ -21,3 +21,20 @@ alert icmp any any -> $HOME_NET any (msg:"icmp alert "; sid:100002 ; rev:1; )
 ----
 - test
 - snort -T -i ens33 -c /etc/snort/snort.conf
+=======
+
+#copy/paste command and dont enter in current vm
+snort -A console -q -i ens33 -c /etc/snort/snort.conf
+-------
+#go to next vm
+#now do previous step that u didnt pressed entered
+#(ping main server's ip(192.168.144.116))
+ping 192.168.144.116
+-----
+main work to execute
+enter first this command in snort server [ snort -A console -q -i ens33 -c /etc/snort/snort.conf ]
+enter secondly this in new made vm [ping 192.168.144.216] ie snort server ip
+
+
+
+
