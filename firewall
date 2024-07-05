@@ -1,3 +1,5 @@
+use Centos vm
+
 Basic firewall commands
 	current State 
 		# firewall-cmd --state
