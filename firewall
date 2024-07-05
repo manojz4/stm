@@ -95,9 +95,8 @@ Rich Rules:
 	# firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="192.168.91.102/32" service name="ssh" reject' --permanent
 											IP / IP range           services name  accept or drop      
 ------	   
-
-
-	# firewall-cmd --zone=public 
+        This is our output
+               # firewall-cmd --zone=public 
 
 		--add-rich-rule=                            
 		'rule					    			: starting of rule
@@ -108,7 +107,7 @@ Rich Rules:
 		accept'                                 : drop , accept or reject   & end of rule
 		--permanent
 -----
-Do this in vm not in mobaxterm
+Do this in vm only
 		
 		
 	Panic mode : 
